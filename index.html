@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>humanity montage</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.sound.min.js"></script>
+    <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.20.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2/dist/coco-ssd.min.js"></script>
+</head>
+<body>
+
+    <video id="video-element" autoplay muted loop playsinline>
+        <source src="videos/montage.mp4" type="video/mp4">
+    </video>
+<video id="vhs-overlay" autoplay loop muted playsinline>
+    <source src="videos/vhs-loop.mp4" type="video/mp4">
+</video>    
+
+<script src="sketch-human.js"></script>
+<script>
+const textArrays = [
+    // Array 1 - walking in the rain
+    ["They just came out to their family", "They are getting married soon"],
+    
+    // Array 2 - singing
+    ["They love to sing", "They are choosing between medicine and groceries", "They are 3 months sober", "They miss their mom"],
+    
+    // Array 3 - dancing
+    ["They are learning how to dance", "They love kpop", "They just got accepted into their dream school"],
+    
+    // Array 4 - biking
+    ["This is the last time they'll bike together as a family"],
+    
+    // Array 5 - birthday
+    ["They are turning a year older together"],
+    
+    // Array 6 - sunset
+    ["They just got laid off"],
+    
+    // Array 7 - crane game
+    ["They are getting over a breakup for a 10-year relationship"],
+    
+    // Array 8 - musician
+    ["They are grieving the loss of a loved one", "They are moving to a new city"],
+    
+    // Array 9 - parent and kid
+    ["They are escaping an abusive relationship", "They forgot their lunchbox at school"],
+    
+    // Array 10 - street vendor
+    ["They are working two jobs to support their family"],
+    
+    // Array 11 - hospital
+    ["They just got diagnosed with a chronic illness"],
+    
+    // Array 12 - waiting for subway
+    ["They love to crochet", "They just got their dream job", "They are saving up to surprise their family", "They are about to adopt a pet"],
+];
+
+const positionSets = [
+    // Set 1 
+    [
+        { x: 0.1, y: 0.4 },  
+        { x: 0.70, y: 0.6 }, 
+    ],
+    
+    // Set 2 
+    [
+        { x: 0.1, y: 0.6 },  
+        { x: 0.18, y: 0.4 },  
+        { x: 0.5, y: 0.6 },  
+        { x: 0.65, y: 0.5 } 
+    ],
+    
+    // Set 3 
+    [
+        { x: 0.05, y: 0.6 },   
+        { x: 0.48, y: 0.65 }, 
+        { x: 0.55, y: 0.80 },
+    ],
+    
+    // Set 4 
+    [
+        { x: 0.50, y: 0.18 },
+    ],
+    
+    // Set 5 
+    [
+        { x: 0.2, y: 0.3 },  
+    ],
+    
+    // Set 6 
+    [
+        { x: 0.35, y: 0.60 },
+    ],
+    
+    // Set 7 
+    [
+        { x: 0.1, y: 0.45 },  
+        { x: 0.35, y: 0.5 },  
+        { x: 0.65, y: 0.48 }, 
+        { x: 0.9, y: 0.52 }   
+    ],
+    
+    // Set 8 
+    [
+        { x: 0.12, y: 0.78 },
+        { x: 0.62, y: 0.52 }, 
+    ],
+    
+    // Set 9 
+    [
+        { x: 0.25, y: 0.3 }, 
+        { x: 0.20, y: 0.5 }, 
+    ],
+    
+    // Set 10 
+    [
+        { x: 0.48, y: 0.6 },  
+    ],
+    
+    // Set 11 
+    [
+        { x: 0.05, y: 0.6 }, 
+        { x: 0.95, y: 0.25 },
+        { x: 0.08, y: 0.7 }, 
+        { x: 0.92, y: 0.75 } 
+    ],
+
+    // Set 12 
+    [
+        { x: 0.5, y: 0.27 },  
+        { x: 0.8, y: 0.14 },  
+        { x: 0.65, y: 0.48 }, 
+        { x: 0.6, y: 0.75 } 
+    ]
+];
+
+// **VIDEO SYNC CONFIGURATION**
+const videoTimecodes = [
+    0,    // Array 1 at start (0s)
+    4,    // Array 2 at 4s
+    8,    // Array 3 at 8s
+    12,   // Array 4 at 12s
+    16,   // Array 5 at 16s
+    20,   // Array 6 at 20s
+    24,   // Array 7 at 24s
+    28,   // Array 8 at 28s
+    32,   // Array 9 at 32s
+    36,   // Array 10 at 36s
+    40,   // Array 11 at 40s
+    44    // Array 12 at 44s
+];
+
+// State management
+let currentArrayIndex = -1;
+let isVideoSynced = false;
+let lastTriggeredTime = -1;
+const FONT_SIZE_BASE = 2.2; // rem
+
+// **CORE FUNCTIONS**
+
+function getResponsivePosition(normalizedX, normalizedY) {
+    return {
+        x: normalizedX * window.innerWidth,
+        y: normalizedY * window.innerHeight
+    };
+}
+
+function clearAllText() {
+    // Remove text to clear for next text
+    const existingTexts = document.querySelectorAll('.text-overlay');
+    existingTexts.forEach(el => el.remove());
+}
+
+function displayTextArray(arrayIndex) {
+    clearAllText();
+    
+    if (arrayIndex < 0 || arrayIndex >= textArrays.length) return;
+    
+    const texts = textArrays[arrayIndex];
+    const positions = positionSets[arrayIndex];
+    
+    // Display each text in the array at its designated position
+    texts.forEach((text, textIndex) => {
+        if (textIndex < positions.length) {
+            createTextElement(text, positions[textIndex]);
+        }
+    });
+    
+    currentArrayIndex = arrayIndex;
+    console.log(`Video Sync: Displaying Array ${arrayIndex + 1} at ${videoElement.currentTime.toFixed(1)}s: ${texts.join(', ')}`);
+}
+
+function createTextElement(text, position) {
+    const element = document.createElement('div');
+    element.className = 'text-overlay';
+    element.textContent = text;
+    
+    // Apply responsive positioning
+    const actualPos = getResponsivePosition(position.x, position.y);
+    element.style.left = actualPos.x + 'px';
+    element.style.top = actualPos.y + 'px';
+    
+    document.body.appendChild(element);
+}
+
+// **VIDEO SYNC FUNCTIONS**
+
+function handleVideoTimeUpdate() {
+    if (!isVideoSynced) return;
+    
+    const currentTime = videoElement.currentTime;
+    
+    // Check if we hit any timecode markers
+    videoTimecodes.forEach((timecode, index) => {
+        // Use a tolerance window to catch the timecode (0.2s window)
+        if (Math.abs(currentTime - timecode) < 0.2 && 
+            Math.abs(lastTriggeredTime - timecode) > 0.5) { // Prevent multiple triggers
+            
+            displayTextArray(index);
+            lastTriggeredTime = timecode;
+            
+            console.log(`Timecode hit: ${timecode}s -> Array ${index + 1}`);
+        }
+    });
+}
+
+function handleVideoRestart() {
+    console.log('Video restarted - resetting text sync');
+    currentArrayIndex = -1;
+    lastTriggeredTime = -1;
+    clearAllText();
+    
+    // Show first array immediately when video restarts
+    setTimeout(() => {
+        displayTextArray(0);
+        lastTriggeredTime = 0;
+    }, 100);
+}
+
+function initializeVideoSync() {
+    const videoElement = document.getElementById('video-element');
+    
+    if (!videoElement) {
+        console.error('Video element not found!');
+        return;
+    }
+    
+    // Wait for video to be ready
+    videoElement.addEventListener('canplaythrough', () => {
+        console.log('Video ready - enabling sync');
+        isVideoSynced = true;
+        
+        // Show first array immediately if video is already playing
+        if (videoElement.currentTime > 0 || !videoElement.paused) {
+            displayTextArray(0);
+            lastTriggeredTime = 0;
+        }
+    });
+    
+    // Listen for time updates
+    videoElement.addEventListener('timeupdate', handleVideoTimeUpdate);
+    
+    // Handle video restart/loop
+    videoElement.addEventListener('ended', handleVideoRestart);
+    videoElement.addEventListener('loadeddata', handleVideoRestart);
+    
+    // Handle play/pause
+    videoElement.addEventListener('play', () => {
+        console.log('Video playing - sync enabled');
+        isVideoSynced = true;
+    });
+    
+    videoElement.addEventListener('pause', () => {
+        console.log('Video paused - sync disabled');
+        isVideoSynced = false;
+    });
+    
+    console.log('Video sync initialized with timecodes:', videoTimecodes);
+}
+
+// **INITIALIZATION**
+
+function initializeTextOverlay() {
+    // Add CSS styles for text overlay
+    const style = document.createElement('style');
+    style.textContent = `
+        .text-overlay {
+            position: absolute;
+            color: #FF28EA;
+            font-family: 'Arial Narrow', Arial, sans-serif;
+            font-size: ${FONT_SIZE_BASE}rem;
+            z-index: 1000;
+            filter: blur(0.85px) drop-shadow(0 0 6px #FFB7F0) drop-shadow(0 0 5px #FF5EDD);
+        }
+        
+        @media (min-width: 2000px) {
+            .text-overlay {
+                font-size: ${FONT_SIZE_BASE * 1.2}rem;
+            }
+        }
+        
+        @media (min-width: 3000px) {
+            .text-overlay {
+                font-size: ${FONT_SIZE_BASE * 1.4}rem;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Initialize video sync instead of timer-based cycle
+    initializeVideoSync();
+    
+    console.log('Video-Synced Text Overlay System Initialized');
+    console.log(`${textArrays.length} arrays loaded, synced to video timecodes`);
+}
+
+// **WINDOW RESIZE HANDLER**
+window.addEventListener('resize', () => {
+    // Refresh current display for new dimensions
+    if (currentArrayIndex >= 0) {
+        displayTextArray(currentArrayIndex);
+    }
+});
+
+// **START WHEN PAGE LOADS**
+document.addEventListener('DOMContentLoaded', initializeTextOverlay);
+
+// **DEBUG: Access video element globally for testing**
+let videoElement;
+document.addEventListener('DOMContentLoaded', () => {
+    videoElement = document.getElementById('video-element');
+});
+</script>
+</body>
+</html>

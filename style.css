@@ -1,0 +1,53 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  font-family: 'Arial', sans-serif;
+}
+
+canvas {
+        width: 100vw!important;
+    height: 100vh!important;
+    position: fixed;
+    top: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 100;
+    opacity: 0.6;
+    mask: radial-gradient(ellipse at center, 
+        black 60%,        /* Solid area - smaller = more feathering */
+        transparent 90%); /* Fade end - bigger gap = softer feather */
+    -webkit-mask: radial-gradient(ellipse at center, 
+        black 60%, 
+        transparent 90%);
+}
+
+.video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 1;
+}
+        
+#video-element {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+}
+
+#vhs-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures video covers full screen */
+    z-index: 9999; /* Above the p5.js canvas */
+    pointer-events: none; /* Let clicks pass through */
+    opacity: 0.85; /* Adjust transparency */
+    mix-blend-mode: color-dodge; /* Try: multiply, screen, soft-light */
+    opacity: 55%;
+}

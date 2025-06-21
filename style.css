@@ -13,7 +13,7 @@ canvas {
     left: 50% !important;
     transform: translateX(-50%) !important;
     z-index: 100;
-    opacity: 0.6;
+    opacity: 0.5;
     mask: radial-gradient(ellipse at center, 
         black 60%,        /* Solid area - smaller = more feathering */
         transparent 90%); /* Fade end - bigger gap = softer feather */

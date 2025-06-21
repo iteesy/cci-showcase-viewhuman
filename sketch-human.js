@@ -72,13 +72,13 @@ function drawHumanSide() {
         pg.clear();
         pg.image(capture, 0, 0);
         
-        // FIXED: Recreate buffer every 180 frames (6 seconds at 30fps)
-        if (frameCount % 180 === 0) {
-            // Create new buffer BEFORE destroying old one
-            let newPg = createGraphics(640, 480);
-            pg.remove(); // Remove old buffer
-            pg = newPg;  // Use new buffer
-        }
+        //🚨🚨 Buffer every 180 frames (6 seconds at 30fps)
+        // if (frameCount % 180 === 0) {
+        //     // Create new buffer BEFORE destroying old one
+        //     let newPg = createGraphics(640, 480);
+        //     pg.remove(); // Remove old buffer
+        //     pg = newPg;  // Use new buffer
+        // }
         
         // Draw main masked image
         image(pg, 0, 0);

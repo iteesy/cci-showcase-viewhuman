@@ -22,10 +22,12 @@
 
 <script src="sketch-human.js"></script>
 <script>
+console.log('Auto-refresh script loaded! Will refresh after 15.2 minutes (19 video cycles)');
+
 setTimeout(() => {
-    console.log('Auto-refreshing human canvas after 15.2 minutes...');
+    console.log('Auto-refreshing human canvas now...');
     location.reload();
-}, 1 * 48 * 1000); // 19 complete cycles = 912 seconds = 15.2 minutes
+}, 19 * 48 * 1000); // 19 complete cycles = 912 seconds = 15.2 minutes
 </script>
 
 <script>

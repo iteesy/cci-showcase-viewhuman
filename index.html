@@ -37,7 +37,7 @@ const textArrays = [
     ["They just came out to their family", "They are getting married soon"],
     
     // Array 2 - singing
-    ["They love to sing", "They are choosing between medicine and groceries", "They are 3 months sober", "They miss their mom"],
+    ["They love to sing", "They cannot afford this month's rent", "They are 3 months sober", "They miss their mom"],
     
     // Array 3 - dancing
     ["They are learning how to dance", "They love kpop", "They just got accepted into their dream school"],
@@ -58,7 +58,7 @@ const textArrays = [
     ["They are grieving the loss of a loved one", "They are moving to a new city"],
     
     // Array 9 - parent and kid
-    ["They are escaping an abusive relationship", "They forgot their lunchbox at school"],
+    ["They are escaping an abusive relationship", "They just loss their first baby tooth"],
     
     // Array 10 - street vendor
     ["They are working two jobs to support their family"],
@@ -67,7 +67,13 @@ const textArrays = [
     ["They just got diagnosed with a chronic illness"],
     
     // Array 12 - waiting for subway
-    ["They love to crochet", "They just got their dream job", "They are saving up to surprise their family", "They are about to adopt a pet"],
+    ["They love to crochet", "They just got their dream job", "They have just been denied for a transplant", "They are about to adopt a pet"],
+
+    // Array 13 - waiting for bus
+    ["They are raising funds for their family to rebuild their home", "They have just immigrated to a new country"],
+
+    // Array 14 - barista
+    ["They like to make coffee for their partner every morning"],
 ];
 
 const positionSets = [
@@ -88,7 +94,7 @@ const positionSets = [
     // Set 3 
     [
         { x: 0.05, y: 0.6 },   
-        { x: 0.48, y: 0.65 }, 
+        { x: 0.48, y: 0.70 }, 
         { x: 0.55, y: 0.80 },
     ],
     
@@ -142,16 +148,28 @@ const positionSets = [
 
     // Set 12 
     [
-        { x: 0.5, y: 0.27 },  
+        { x: 0.5, y: 0.32 },  
         { x: 0.8, y: 0.14 },  
         { x: 0.65, y: 0.48 }, 
         { x: 0.6, y: 0.75 } 
+    ],
+
+    // Set 13
+    [
+        { x: 0.1, y: 0.57 },  
+        { x: 0.15, y: 0.88 },  
+    ],
+
+    // Set 14
+    [
+        { x: 0.5, y: 0.27 },  
+        { x: 0.8, y: 0.14 },  
     ]
 ];
 
 // **VIDEO SYNC CONFIGURATION**
 const videoTimecodes = [
-    0,    // Array 1 at start (0s)
+    0,    // Array 1 at start 
     4,    // Array 2 at 4s
     8,    // Array 3 at 8s
     12,   // Array 4 at 12s
@@ -162,7 +180,9 @@ const videoTimecodes = [
     32,   // Array 9 at 32s
     36,   // Array 10 at 36s
     40,   // Array 11 at 40s
-    44    // Array 12 at 44s
+    44,    // Array 12 at 44s
+    48,    // Array 13 at 48s
+    52,    // Array 14 at 52s
 ];
 
 // State management

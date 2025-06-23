@@ -57,7 +57,7 @@ function drawHumanSide() {
         blendMode(EXCLUSION);
 
         // try every 5th or 10th frame
-        if (frameCount - lastMaskUpdate > 12) { // Was 2
+        if (frameCount - lastMaskUpdate > 4) { // Was 2
             cachedBlurredMask = segmentation.mask.get();
             cachedBlurredMask.filter(BLUR, 2);
             lastMaskUpdate = frameCount;

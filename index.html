@@ -22,12 +22,12 @@
 
 <script src="sketch-human.js"></script>
 <script>
-console.log('Auto-refresh script loaded! Will refresh after 15.2 minutes (19 video cycles)');
+console.log('Auto-refresh script loaded! will refresh after 14.93 minutes (16 video cycles)');
 
 setTimeout(() => {
-    console.log('Auto-refreshing human canvas now...');
+    console.log('Refreshing human canvas now...');
     location.reload();
-}, 19 * 48 * 1000); // 19 complete cycles = 912 seconds = 15.2 minutes
+}, 16 * 48 * 1000); // 16 cycles, 14.93 min
 </script>
 
 <script>
@@ -52,7 +52,7 @@ const textArrays = [
     ["They just got laid off"],
     
     // Array 7 - crane game
-    ["They are getting over a breakup for a 10-year relationship"],
+    ["They are getting over a breakup for a 5-year relationship"],
     
     // Array 8 - musician
     ["They are grieving the loss of a loved one", "They are moving to a new city"],
@@ -351,7 +351,6 @@ function initializeTextOverlay() {
 
 // **WINDOW RESIZE HANDLER**
 window.addEventListener('resize', () => {
-    // Refresh current display for new dimensions
     if (currentArrayIndex >= 0) {
         displayTextArray(currentArrayIndex);
     }

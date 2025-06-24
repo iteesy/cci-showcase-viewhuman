@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>humanity montage</title>
+    <title>montage</title>
+    <link rel="stylesheet" href="https://use.typekit.net/mri8bmg.css">
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="libraries/p5.min.js"></script>
     <script src="libraries/p5.sound.min.js"></script>
@@ -40,7 +41,7 @@ const textArrays = [
     ["They love to sing", "They cannot afford this month's rent", "They are 3 months sober", "They miss their mom"],
     
     // Array 3 - dancing
-    ["They are learning how to dance", "They love kpop", "They just got accepted into their dream school"],
+    ["They are learning how to dance", "They have their first date today", "They just got accepted into their dream school"],
     
     // Array 4 - biking
     ["This is the last time they'll bike together as a family"],
@@ -189,7 +190,7 @@ const videoTimecodes = [
 let currentArrayIndex = -1;
 let isVideoSynced = false;
 let lastTriggeredTime = -1;
-const FONT_SIZE_BASE = 2.2; // rem
+const FONT_SIZE_BASE = 3.8; // rem
 
 // **CORE FUNCTIONS**
 
@@ -325,7 +326,7 @@ function initializeTextOverlay() {
             font-family: 'Arial Narrow', Arial, sans-serif;
             font-size: ${FONT_SIZE_BASE}rem;
             z-index: 1000;
-            filter: blur(0.85px) drop-shadow(0 0 6px #FFB7F0) drop-shadow(0 0 5px #FF5EDD);
+            filter: blur(1.8px) drop-shadow(0 0 6px #FFB7F0) drop-shadow(0 0 5px #FF5EDD);
         }
         
         @media (min-width: 2000px) {
